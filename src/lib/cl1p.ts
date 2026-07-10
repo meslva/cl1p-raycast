@@ -28,5 +28,8 @@ export async function saveToCl1p(
     };
   }
 
-  return { ok: true, url: `https://cl1p.net/${encodeURIComponent(cleanTitle)}` };
+  return {
+    ok: true,
+    url: `https://cl1p.net/${encodeURIComponent(cleanTitle)}`,
+  };
 }

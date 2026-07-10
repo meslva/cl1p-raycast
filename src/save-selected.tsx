@@ -51,7 +51,9 @@ export default async function Command(
     }
 
     await Clipboard.copy(result.url);
-    await showHUD(`Saved · ${result.url} copied to clipboard\nDestroyed after first view`);
+    await showHUD(
+      `Saved · ${result.url} copied to clipboard\nDestroyed after first view`,
+    );
   } catch (error) {
     await showToast({
       style: Toast.Style.Failure,

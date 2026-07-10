@@ -11,10 +11,6 @@ import {
 import { useState } from "react";
 import { saveToCl1p } from "./lib/cl1p";
 
-interface Preferences {
-  apiToken: string;
-}
-
 interface FormValues {
   title: string;
   content: string;
@@ -50,7 +46,7 @@ export default function Command() {
       }
 
       await Clipboard.copy(result.url);
-      await showHUD(`Saved · ${result.url} copied to clipboard`);
+      await showHUD(`Saved · ${result.url} copied to clipboard\nDestroyed after first view`);
     } catch (error) {
       await showToast({
         style: Toast.Style.Failure,
@@ -68,7 +64,7 @@ export default function Command() {
         </ActionPanel>
       }
     >
-      <Form.Description text="https://cl1p.net/{note name}" />
+      <Form.Description text={"https://cl1p.net/{note name}\nLink is destroyed after it's opened once"} />
       <Form.TextField
         id="title"
         title="Note Name"

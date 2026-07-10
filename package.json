@@ -15,19 +15,21 @@
       "name": "save",
       "title": "Save to cl1p.net",
       "subtitle": "cl1p",
-      "description": "Save text to a cl1p.net path and copy the URL",
+      "description": "Save text to a cl1p.net title and copy the URL",
+      "mode": "view",
+      "keywords": ["clip", "clipboard", "paste", "pastebin", "share"]
+    },
+    {
+      "name": "save-selected",
+      "title": "Save Selected Text to cl1p.net",
+      "subtitle": "cl1p",
+      "description": "Save the currently selected text to a cl1p.net note and copy the URL",
       "mode": "no-view",
-      "keywords": ["clip", "clipboard", "paste", "pastebin", "share"],
+      "keywords": ["clip", "clipboard", "paste", "pastebin", "share", "selected", "selection"],
       "arguments": [
         {
-          "name": "path",
-          "placeholder": "Path",
-          "type": "text",
-          "required": true
-        },
-        {
-          "name": "content",
-          "placeholder": "Content",
+          "name": "title",
+          "placeholder": "Note Name",
           "type": "text",
           "required": true
         }
@@ -50,7 +52,7 @@
   "devDependencies": {
     "@raycast/eslint-config": "^1.0.11",
     "@types/node": "^20.14.9",
-    "@types/react": "^18.3.3",
+    "@types/react": "^19.0.10",
     "eslint": "^8.57.0",
     "prettier": "^3.3.3",
     "typescript": "^5.4.5"

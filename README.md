@@ -4,13 +4,13 @@ A Raycast extension that saves text to [cl1p.net](https://cl1p.net) and copies t
 
 ## What it does
 
-Run **Save to cl1p.net** (search for `cl1p`, `clip`, or `save`), fill in a path and the content you want to share, and press Enter. The extension:
+Run **Save to cl1p.net** (search for `cl1p`, `clip`, or `save`), fill in a title and the (multi-line) content you want to share in the form, and submit. The extension:
 
-1. Sends the content to `https://cl1p.net/<path>` via the cl1p.net API
-2. Copies `https://cl1p.net/<path>` to your system clipboard
+1. Sends the content to `https://cl1p.net/<title>` via the cl1p.net API
+2. Copies `https://cl1p.net/<title>` to your system clipboard
 3. Shows a success or failure notification
 
-If the path is already in use, cl1p.net refuses the write and the extension shows an error toast — pick a different path and try again.
+If the title is already in use, cl1p.net refuses the write and the extension shows an error toast — pick a different title and try again.
 
 ## Setup
 

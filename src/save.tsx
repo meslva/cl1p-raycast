@@ -1,62 +1,88 @@
 import {
-  LaunchProps,
+  Action,
+  ActionPanel,
+  Clipboard,
+  Form,
   getPreferenceValues,
+  showHUD,
   showToast,
   Toast,
-  Clipboard,
-  showHUD,
 } from "@raycast/api";
+import { useState } from "react";
+import { saveToCl1p } from "./lib/cl1p";
 
 interface Preferences {
   apiToken: string;
 }
 
-interface Arguments {
-  path: string;
+interface FormValues {
+  title: string;
   content: string;
 }
 
-export default async function Command(
-  props: LaunchProps<{ arguments: Arguments }>,
-) {
-  const { path, content } = props.arguments;
-  const { apiToken } = getPreferenceValues<Preferences>();
+export default function Command() {
+  const [titleError, setTitleError] = useState<string | undefined>();
+  const [contentError, setContentError] = useState<string | undefined>();
 
-  const cleanPath = path.trim().replace(/^\/+/, "");
-  const shareUrl = `https://cl1p.net/${cleanPath}`;
-
-  await showToast({ style: Toast.Style.Animated, title: "Saving..." });
-
-  try {
-    const response = await fetch(
-      `https://api.cl1p.net/${encodeURIComponent(cleanPath)}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/html; charset=UTF-8",
-          cl1papitoken: apiToken,
-        },
-        body: content,
-      },
-    );
-
-    if (!response.ok) {
-      const body = await response.text().catch(() => "");
-      await showToast({
-        style: Toast.Style.Failure,
-        title: "Save failed",
-        message: body || `HTTP ${response.status} — path may already be in use`,
-      });
+  async function handleSubmit(values: FormValues) {
+    if (!values.title.trim()) {
+      setTitleError("Title is required");
+      return;
+    }
+    if (!values.content) {
+      setContentError("Content is required");
       return;
     }
 
-    await Clipboard.copy(shareUrl);
-    await showHUD(`Saved · ${shareUrl} copied to clipboard`);
-  } catch (error) {
-    await showToast({
-      style: Toast.Style.Failure,
-      title: "Network error",
-      message: String(error),
-    });
+    const { apiToken } = getPreferenceValues<Preferences>();
+
+    await showToast({ style: Toast.Style.Animated, title: "Saving..." });
+
+    try {
+      const result = await saveToCl1p(values.title, values.content, apiToken);
+      if (!result.ok) {
+        await showToast({
+          style: Toast.Style.Failure,
+          title: "Save failed",
+          message: result.message,
+        });
+        return;
+      }
+
+      await Clipboard.copy(result.url);
+      await showHUD(`Saved · ${result.url} copied to clipboard`);
+    } catch (error) {
+      await showToast({
+        style: Toast.Style.Failure,
+        title: "Network error",
+        message: String(error),
+      });
+    }
   }
+
+  return (
+    <Form
+      actions={
+        <ActionPanel>
+          <Action.SubmitForm title="Save to cl1p.net" onSubmit={handleSubmit} />
+        </ActionPanel>
+      }
+    >
+      <Form.Description text="https://cl1p.net/{note name}" />
+      <Form.TextField
+        id="title"
+        title="Note Name"
+        placeholder="my-note"
+        error={titleError}
+        onChange={() => setTitleError(undefined)}
+      />
+      <Form.TextArea
+        id="content"
+        title="Content"
+        placeholder="Paste anything you want to save"
+        error={contentError}
+        onChange={() => setContentError(undefined)}
+      />
+    </Form>
+  );
 }
